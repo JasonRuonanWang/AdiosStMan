@@ -73,7 +73,7 @@ namespace casacore {
         MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
     }
 
-    DataManager* AdiosStMan::makeObject (const casa::String& aDataManType, const casa::Record& spec){
+    DataManager* AdiosStMan::makeObject (const String& aDataManType, const Record& spec){
         return new AdiosStMan();
     }
 
@@ -159,7 +159,7 @@ namespace casacore {
             // create ADIOS file
             adios_init_noxml(itsMpiComm);
             adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosWriteBufsize);
-            adios_declare_group(&itsAdiosGroup, "casatable", "", adios_flag_no);
+            adios_declare_group(&itsAdiosGroup, "casatable", "", adios_stat_no);
             adios_select_method(itsAdiosGroup, itsAdiosTransMethod.c_str(), itsAdiosTransPara.c_str(), "");
             for (uInt i=0; i<itsNrCols; i++){
                 itsColumnPtrBlk[i]->initAdiosWrite(itsNrRows);

@@ -72,7 +72,7 @@ namespace casacore {
             int64_t getAdiosGroup();
             ADIOS_FILE* getAdiosReadFile();
 
-            static DataManager* makeObject (const casa::String& aDataManType, const casa::Record& spec);
+            static DataManager* makeObject (const String& aDataManType, const Record& spec);
 
             void adiosWriteOpen();
             void adiosWriteClose();
