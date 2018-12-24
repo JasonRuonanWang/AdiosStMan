@@ -24,8 +24,6 @@
 #include "AdiosStManDirColumn.h"
 #include "AdiosStManScaColumn.h"
 
-#define ADIOSSTMAN_DEBUG
-
 namespace casacore {
 
     int AdiosStMan::itsNrInstances = 0;
