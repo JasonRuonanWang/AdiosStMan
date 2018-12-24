@@ -71,8 +71,8 @@ int main(int argc, char **argv){
     }
 
     // define a dimension object for the array column
-    IPosition data_pos = IPosition(2,5000,6000);
-    int NrRows = 500;
+    IPosition data_pos = IPosition(2,50,60);
+    int NrRows = 10;
     // define data arrays that actually hold the data
     Array<Float> data_arr(data_pos);
     // put some data into the data array

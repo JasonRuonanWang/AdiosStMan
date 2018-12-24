@@ -24,6 +24,7 @@
 #include "AdiosStManDirColumn.h"
 #include "AdiosStManScaColumn.h"
 
+#define ADIOSSTMAN_DEBUG
 
 namespace casacore {
 
@@ -80,12 +81,12 @@ namespace casacore {
     AdiosStMan::~AdiosStMan ()
     {
         AdiosStMan::itsNrInstances--;
-        adios_finalize(mpiRank);
+        adiosWriteClose();
         if(itsAdiosReadFile){
             adios_read_close(itsAdiosReadFile);
-            MPI_Barrier(MPI_COMM_WORLD);
             adios_read_finalize_method(ADIOS_READ_METHOD_BP);
         }
+        adios_finalize(mpiRank);
         int isMpiInitialized;
         MPI_Initialized(&isMpiInitialized);
         if(isMpiInitInternal && isMpiInitialized){
@@ -104,15 +105,7 @@ namespace casacore {
 
     void AdiosStMan::logdbg(string func, string stat, int para){
 #ifdef ADIOSSTMAN_DEBUG
-        if(logdbgLast == func){
-            logdbgCount++;
-        }
-        else{
-            logdbgCount=0;
-        }
-        cout << func << " called, count=" << logdbgCount << ".";
-        cout << stat << para << endl;
-        logdbgLast=func;
+        cout << func << " called, " << stat << para << endl;
 #endif
     }
 
@@ -158,7 +151,7 @@ namespace casacore {
             MPI_Bcast(itsFileNameChar, itsFileNameLen + 1, MPI_CHAR, 0, itsMpiComm);
             // create ADIOS file
             adios_init_noxml(itsMpiComm);
-            adios_allocate_buffer(ADIOS_BUFFER_ALLOC_NOW, itsAdiosWriteBufsize);
+            adios_set_max_buffer_size(itsAdiosWriteBufsize);
             adios_declare_group(&itsAdiosGroup, "casatable", "", adios_stat_no);
             adios_select_method(itsAdiosGroup, itsAdiosTransMethod.c_str(), itsAdiosTransPara.c_str(), "");
             for (uInt i=0; i<itsNrCols; i++){
@@ -273,7 +266,6 @@ namespace casacore {
         ios << itsDataManName;
         ios << itsStManColumnType;
         ios.putend();
-        adiosWriteClose();
         return true;
     }
 
